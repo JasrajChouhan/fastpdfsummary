@@ -3,6 +3,7 @@ import { HowItWorks } from '@/components/commons/how-it-works';
 import { DemoSection } from '@/components/home/demo-section';
 
 import { HeroSection } from '@/components/home/hero-section';
+import { PricingSection } from '@/components/home/pricing-section';
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
         <HeroSection />
         <DemoSection />
         <HowItWorks />
+        <PricingSection />
       </div>
     </main>
   );
