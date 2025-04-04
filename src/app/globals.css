@@ -137,6 +137,10 @@
   }
 }
 
+.animate-gradient-x {
+  animation: gradient-x 0.3s ease infinite;
+}
+
 @layer utilities {
   .clip-path-polygon-xs {
     clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 0% 100%);
