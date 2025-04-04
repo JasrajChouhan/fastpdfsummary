@@ -26,7 +26,7 @@ export const ourFileRouter = {
       console.log('File Url : ', file.ufsUrl);
 
       return {
-        uploadedBy: metadata.userId,
+        userId: metadata.userId,
         file,
       };
     }),

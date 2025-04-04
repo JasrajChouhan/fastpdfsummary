@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useUploadThing } from '@/utils/uploadthing';
 
 import { toast } from 'sonner';
+import { generatePDFSummary } from '@/actions/upload-action';
 
 const FileFormSchema = z.object({
   file: z
@@ -53,6 +54,10 @@ export const UploadForm = () => {
     console.log('hello ', validation);
 
     const response = await startUpload([file]);
+
+    const langchainResponse = await generatePDFSummary(response);
+    console.log(langchainResponse);
+    console.log('data', langchainResponse.data);
 
     if (!response) {
       toast.error('Something went wrong, Plese try again');
