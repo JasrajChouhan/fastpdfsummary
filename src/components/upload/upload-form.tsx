@@ -4,6 +4,8 @@ import { UploadFileInput } from './upload-file-input';
 import { z } from 'zod';
 import { useUploadThing } from '@/utils/uploadthing';
 
+import { toast } from 'sonner';
+
 const FileFormSchema = z.object({
   file: z
     .instanceof(File, {
@@ -20,13 +22,14 @@ const FileFormSchema = z.object({
 export const UploadForm = () => {
   const { startUpload } = useUploadThing('PDFUploader', {
     onClientUploadComplete: () => {
-      alert('uploaded successfully!');
+      toast.success('File uploaded successfully');
     },
     onUploadError: () => {
-      alert('error occurred while uploading');
+      toast.error('error occurred while uploading');
     },
     onUploadBegin: ({ file }) => {
       console.log('upload has begun for', file);
+      toast.info('upload has begun');
     },
   });
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -36,7 +39,6 @@ export const UploadForm = () => {
     if (!form) {
       throw new Error('Form data is not available');
     }
-
     // Parse the form
 
     const file = form.get('file') as File;
@@ -45,6 +47,7 @@ export const UploadForm = () => {
 
     if (!validation.success) {
       console.log(validation.error.format()._errors[0] ?? 'Invalid file');
+      toast.error(validation.error.format()._errors[0] ?? 'Invalid file');
     }
 
     console.log('hello ', validation);
@@ -52,6 +55,7 @@ export const UploadForm = () => {
     const response = await startUpload([file]);
 
     if (!response) {
+      toast.error('Something went wrong, Plese try again');
       return;
     }
   };
