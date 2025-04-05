@@ -17,12 +17,19 @@ export const generatePDFSummaryFromGemini = async (pdfText: string) => {
     const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
       contents: prompt,
+      config: {
+        temperature: 0.6,
+        maxOutputTokens: 1000,
+      },
     });
     console.log(response.text);
 
     return response.text;
-  } catch (error) {
+  } catch (error: any) {
     console.log('Gemini Api error : ', error);
-    throw new Error('Gemini Api error');
+    if (error?.status === 429) {
+      throw new Error('Gemini Api rate limit exceeded');
+    }
+    throw error;
   }
 };
