@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { vinamaPrompt } from './prompt';
+import { generatePDFSummaryFromGemini } from './gemini';
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -29,7 +30,9 @@ export const generatePDFSummaryFromOpenAI = async (pdfText: string) => {
   } catch (error: any) {
     if (error.status === 429) {
       console.error('Rate limit exceeded. Please try again later.');
-      throw new Error('Rate limit exceeded. Please try again later.');
+      // throw new Error('Rate limit exceeded. Please try again later.');
+
+      return await generatePDFSummaryFromGemini(pdfText);
     }
 
     throw error;
