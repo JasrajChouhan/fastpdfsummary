@@ -1,6 +1,7 @@
 'use server';
 
 import { fetchAndExtractText } from '@/utils/langchain';
+import { generatePDFSummaryFromOpenAI } from '@/utils/openai';
 
 export const generatePDFSummary = async (
   uploadResponse: [
@@ -42,6 +43,15 @@ export const generatePDFSummary = async (
   try {
     const summary = await fetchAndExtractText(url);
     console.log('summary', summary);
+
+    const openaiSummary = await generatePDFSummaryFromOpenAI(summary);
+
+    console.log({
+      openaiSummary,
+    });
+    if (!openaiSummary) {
+      throw new Error('OpenAI summary is empty');
+    }
     return {
       success: true,
       message: 'File upload is successful',
@@ -49,7 +59,7 @@ export const generatePDFSummary = async (
         userId,
         fileName: name,
         fileUrl: url,
-        summary,
+        summary: openaiSummary,
       },
     };
   } catch (error) {

@@ -57,7 +57,7 @@ export const UploadForm = () => {
 
     const langchainResponse = await generatePDFSummary(response);
     console.log(langchainResponse);
-    console.log('data', langchainResponse.data);
+    console.log('data', langchainResponse?.data);
 
     if (!response) {
       toast.error('Something went wrong, Plese try again');
