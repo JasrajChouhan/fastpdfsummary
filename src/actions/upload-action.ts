@@ -1,5 +1,6 @@
 'use server';
 
+import { formatFileNameAsFileTitle } from '@/utils/format-title';
 import { fetchAndExtractText } from '@/utils/langchain';
 import { generatePDFSummaryFromOpenAI } from '@/utils/openai';
 
@@ -52,6 +53,9 @@ export const generatePDFSummary = async (
     if (!openaiSummary) {
       throw new Error('OpenAI summary is empty');
     }
+
+    const formatedFileName = formatFileNameAsFileTitle(name);
+
     return {
       success: true,
       message: 'File upload is successful',
@@ -60,6 +64,7 @@ export const generatePDFSummary = async (
         fileName: name,
         fileUrl: url,
         summary: openaiSummary,
+        title: formatedFileName,
       },
     };
   } catch (error) {

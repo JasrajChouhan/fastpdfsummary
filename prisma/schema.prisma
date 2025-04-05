@@ -24,10 +24,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  pdfSummary PDFSummaries?
+  pdfSummary PdfSummaries?
 }
 
-model PDFSummaries {
+model PdfSummaries {
   id              String  @id @default(uuid())
   userId          String  @unique
   user User @relation(fields: [userId], references: [id])

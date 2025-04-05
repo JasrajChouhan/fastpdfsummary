@@ -7,6 +7,7 @@ import { useUploadThing } from '@/utils/uploadthing';
 import { toast } from 'sonner';
 import { generatePDFSummary } from '@/actions/upload-action';
 import { Loader2 } from 'lucide-react';
+import { savePDFSummary } from '@/actions/summary-action';
 
 const FileFormSchema = z.object({
   file: z
@@ -68,15 +69,29 @@ export const UploadForm = () => {
         return;
       }
 
-      const langchainResponse = await generatePDFSummary(response);
+      const {
+        data = null,
+        message = null,
+        success,
+      } = await generatePDFSummary(response);
 
-      if (!langchainResponse?.success) {
+      console.log({ data });
+
+      await savePDFSummary({
+        userId: data?.userId as string,
+        originalFileUrl: data?.fileUrl as string,
+        fileName: file.name as string,
+        title: data?.title as string,
+        summaryText: data?.summary as string,
+      });
+
+      if (!success) {
         toast.error('Summary generation failed. Please try again.');
         return;
       }
 
       toast.success('Summary generated successfully!');
-      console.log('Summary:', langchainResponse?.data?.summary);
+      console.log('Summary:', data?.summary);
     } catch (error) {
       toast.error('Something went wrong');
       console.error(error);
