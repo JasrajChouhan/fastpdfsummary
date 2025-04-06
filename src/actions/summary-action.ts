@@ -4,14 +4,13 @@ import { prisma } from '@/lib/prisma';
 import { onAuthenticateUser } from './user-auth';
 
 export interface SavePDFSummaryType {
-  userId: string;
+  userId?: string;
   originalFileUrl: string;
   summaryText: string;
   title: string;
   fileName: string;
 }
 export const savePDFSummary = async ({
-  userId,
   originalFileUrl,
   summaryText,
   title,
@@ -28,7 +27,7 @@ export const savePDFSummary = async ({
     // save pdf summary
     const savedSummary = await prisma.pdfSummaries.create({
       data: {
-        userId,
+        userId: user.data?.userId as string,
         originalFileUrl,
         summaryText,
         title,
