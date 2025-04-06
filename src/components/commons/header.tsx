@@ -1,7 +1,6 @@
 import { FileText } from 'lucide-react';
 import { NavLink } from '@/components/commons/nav-link';
-
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut, UserButton, SignInButton } from '@clerk/nextjs';
 
 export const Header = () => {
   return (
@@ -37,9 +36,11 @@ export const Header = () => {
         </SignedIn>
 
         <SignedOut>
-          <NavLink href="/sign-in" className="text-gray-900">
-            <span>Login</span>
-          </NavLink>
+          <SignInButton forceRedirectUrl={'/post-login'}>
+            <span className="relative inline-block px-6 py-2 cursor-pointer rounded-2xl font-semibold text-rose-600 bg-rose-200 hover:bg-rose-300/80 transition-colors duration-300 overflow-hidden group">
+              <span className="relative z-10">Login</span>
+            </span>
+          </SignInButton>
         </SignedOut>
       </div>
     </nav>
