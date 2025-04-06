@@ -21,17 +21,18 @@ model User {
   primeId    String  @unique
   status     Boolean @default(false)
   clerkWebhookId String?
+  userId     String   @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  pdfSummary PdfSummaries?
+  pdfSummary PdfSummaries[]
 }
 
 model PdfSummaries {
   id              String  @id @default(uuid())
-  userId          String  @unique
-  user User @relation(fields: [userId], references: [id])
+  userId          String
+  user            User @relation(fields: [userId], references: [userId])
   originalFileUrl String
   summaryText     String
   status          Boolean @default(false)

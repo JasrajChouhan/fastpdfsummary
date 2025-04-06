@@ -1,6 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
+import { auth } from '@clerk/nextjs/server';
 
 interface ClerkUser {
   email: string;
@@ -15,6 +16,8 @@ export async function createUser({ email, fullName, primeId }: ClerkUser) {
       where: { primeId, email },
     });
 
+    const clerkUser = await auth();
+
     if (existingUser) {
       console.log('User already exists:', existingUser.id);
       return existingUser;
@@ -23,6 +26,7 @@ export async function createUser({ email, fullName, primeId }: ClerkUser) {
     // Create new user
     const newUser = await prisma.user.create({
       data: {
+        userId: clerkUser.userId as string,
         email,
         fullName,
         primeId,

@@ -25,14 +25,14 @@ const FileFormSchema = z.object({
 export const UploadForm = () => {
   const { startUpload } = useUploadThing('PDFUploader', {
     onClientUploadComplete: () => {
-      toast.success('File uploaded successfully');
+      toast.success('🎉 File uploaded successfully!');
     },
     onUploadError: () => {
-      toast.error('error occurred while uploading');
+      toast.error('🚫 Error occurred during upload. Please try again.');
     },
     onUploadBegin: ({ file }) => {
-      console.log('upload has begun for', file);
-      toast.info('upload has begun');
+      console.log('upload has begun for');
+      toast.info(`📤 File Upload start`);
     },
   });
 
@@ -53,21 +53,31 @@ export const UploadForm = () => {
 
     if (!validation.success) {
       console.log(validation.error.format()._errors[0] ?? 'Invalid file');
-      toast.error(validation.error.format()._errors[0] ?? 'Invalid file');
-
+      toast.error(
+        `⚠️ ${validation.error.format().file?._errors?.[0] || 'Invalid file'}`,
+      );
       setLoading(false);
       return;
     }
 
     console.log('hello ', validation);
+    toast.info('📡 Uploading your file, please wait...');
 
     try {
       const response = await startUpload([file]);
+      console.log(response);
 
       if (!response) {
-        toast.error('Upload failed. Please try again.');
+        toast.error('❌ Upload failed. Please try again.');
         return;
       }
+
+      toast.loading(
+        '🧠 Generating summary from your PDF... This might take a few seconds.',
+        {
+          duration: 4000,
+        },
+      );
 
       const {
         data = null,
@@ -77,6 +87,11 @@ export const UploadForm = () => {
 
       console.log({ data });
 
+      if (!success) {
+        toast.error('🛑 Failed to generate summary. Please try again.');
+        return;
+      }
+
       await savePDFSummary({
         userId: data?.userId as string,
         originalFileUrl: data?.fileUrl as string,
@@ -85,15 +100,10 @@ export const UploadForm = () => {
         summaryText: data?.summary as string,
       });
 
-      if (!success) {
-        toast.error('Summary generation failed. Please try again.');
-        return;
-      }
-
-      toast.success('Summary generated successfully!');
+      toast.success('✅ Summary generated successfully!');
       console.log('Summary:', data?.summary);
     } catch (error) {
-      toast.error('Something went wrong');
+      toast.error('🚨 Something went wrong. Try again later.');
       console.error(error);
     } finally {
       setLoading(false);
@@ -103,12 +113,13 @@ export const UploadForm = () => {
   return (
     <section>
       <div>
-        <UploadFileInput onSubmit={handleSubmit} />
-        {loading && (
+        {loading ? (
           <div className="mx-auto max-w-2xl flex flex-col justify-center items-center">
             <Loader2 className="h10 w-10 animate-spin" />
             <p className="text-sm text-muted-foreground"> Please wait </p>
           </div>
+        ) : (
+          <UploadFileInput onSubmit={handleSubmit} />
         )}
       </div>
     </section>
