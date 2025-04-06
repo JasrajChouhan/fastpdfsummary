@@ -73,10 +73,10 @@ export const UploadForm = () => {
         return;
       }
 
-      toast.loading(
+      toast.info(
         '🧠 Generating summary from your PDF... This might take a few seconds.',
         {
-          duration: 4000,
+          duration: 2000,
         },
       );
 
