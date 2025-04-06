@@ -27,7 +27,7 @@ export const generatePDFSummaryFromOpenAI = async (pdfText: string) => {
     console.log(completion.choices[0]);
 
     return completion.choices[0].message.content;
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error.status === 429) {
       console.error('Rate limit exceeded. Please try again later.');
       // throw new Error('Rate limit exceeded. Please try again later.');

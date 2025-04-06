@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import React, { FormEvent } from 'react';
 import { UploadFileInput } from './upload-file-input';
@@ -30,7 +31,7 @@ export const UploadForm = () => {
     onUploadError: () => {
       toast.error('🚫 Error occurred during upload. Please try again.');
     },
-    onUploadBegin: ({ file }) => {
+    onUploadBegin: ({}) => {
       console.log('upload has begun for');
       toast.info(`📤 File Upload start`);
     },

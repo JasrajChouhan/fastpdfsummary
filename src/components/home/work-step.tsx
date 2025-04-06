@@ -4,6 +4,7 @@ export const WorkStep = ({
   description,
 }: {
   id: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   title: string;
   description: string;
