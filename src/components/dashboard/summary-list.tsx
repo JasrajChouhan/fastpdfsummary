@@ -15,8 +15,8 @@ export const SummaryList = async () => {
   }
 
   return (
-    <section>
-      <div className="mt-10 grid gap-4">
+    <section className={'flex justify-between items-center'}>
+      <div className="mx-auto mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {summaryList.summaries.map((summary) => (
           <Link key={summary.id} href={`/summary/${summary.id}`}>
             <SummaryCard {...summary} />
