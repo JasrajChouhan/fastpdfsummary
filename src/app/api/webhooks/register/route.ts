@@ -1,7 +1,11 @@
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
-import { createUser, updateUser } from '@/actions/clerk-user-action';
+import {
+  createUser,
+  deleteUser,
+  updateUser,
+} from '@/actions/clerk-user-action';
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -64,8 +68,9 @@ export async function POST(req: Request) {
   });
 
   console.log('first_name', evt?.data?.first_name);
-
-  const email = email_addresses[0]?.email_address;
+  const email =
+    eventType != 'user.deleted' ? email_addresses[0]?.email_address : '';
+  // const email = email_addresses[0]?.email_address || "";
   const firstName = first_name;
   const lastName = last_name;
   const primeId = primary_email_address_id ?? 'unknown';
@@ -75,6 +80,7 @@ export async function POST(req: Request) {
     email,
     fullName,
     primeId,
+    userId: id,
   };
 
   console.log(userPayload);
@@ -86,6 +92,13 @@ export async function POST(req: Request) {
 
     if (eventType === 'user.updated') {
       const response = await updateUser({ email, fullName, primeId });
+      if (response.status !== 200) {
+        throw new Error(response.message);
+      }
+    }
+
+    if (eventType === 'user.deleted') {
+      const response = await deleteUser(id as string);
       if (response.status !== 200) {
         throw new Error(response.message);
       }

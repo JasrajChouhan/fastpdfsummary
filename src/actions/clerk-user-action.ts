@@ -2,14 +2,16 @@
 
 import { prisma } from '@/lib/prisma';
 import { auth } from '@clerk/nextjs/server';
+import { stat } from 'fs';
 
 interface ClerkUser {
   email: string;
   fullName: string;
   primeId: string;
+  userId?: string;
 }
 
-export async function createUser({ email, fullName, primeId }: ClerkUser) {
+export async function createUser({ email, fullName, primeId , userId }: ClerkUser) {
   try {
     // Check if user already exists by primeId and email
     const existingUser = await prisma.user.findUnique({
@@ -26,7 +28,7 @@ export async function createUser({ email, fullName, primeId }: ClerkUser) {
     // Create new user
     const newUser = await prisma.user.create({
       data: {
-        userId: clerkUser.userId as string,
+        userId: clerkUser.userId as string || userId as string,
         email,
         fullName,
         primeId,
@@ -78,3 +80,56 @@ export async function updateUser({ email, fullName, primeId }: ClerkUser) {
     };
   }
 }
+
+export async function deleteUser(userId : string) {
+  try {
+    console.log({
+      userId
+    })
+    if(!userId) {
+      return {
+        status : 400,
+        message : "User id need to delete an account"
+      }
+    }
+    
+    // First find user and then delete from DB
+    const user = await prisma.user.findFirst({
+      where : {
+        userId
+      }
+    });
+  
+    if(!user) {
+      return {
+        status : 400,
+        message : "user not found"
+      }
+    }
+
+    const deletedUser = await prisma.user.delete({
+      where : {
+        userId : user.userId
+      }
+    })
+
+    if(!deletedUser) {
+      return {
+        status : 500,
+        message : "something went wrong"
+      }
+    }
+  
+    return {
+      status : 200,
+      message : "Account deleted successfully"
+    }
+  } catch (error) {
+    console.log("User delete error " , error);
+    return {
+      status : 500,
+      message : "Internal server error"
+    }
+  }
+}
+
