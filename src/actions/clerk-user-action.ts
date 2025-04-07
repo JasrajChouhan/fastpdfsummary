@@ -11,7 +11,12 @@ interface ClerkUser {
   userId?: string;
 }
 
-export async function createUser({ email, fullName, primeId , userId }: ClerkUser) {
+export async function createUser({
+  email,
+  fullName,
+  primeId,
+  userId,
+}: ClerkUser) {
   try {
     // Check if user already exists by primeId and email
     const existingUser = await prisma.user.findUnique({
@@ -28,7 +33,7 @@ export async function createUser({ email, fullName, primeId , userId }: ClerkUse
     // Create new user
     const newUser = await prisma.user.create({
       data: {
-        userId: clerkUser.userId as string || userId as string,
+        userId: (clerkUser.userId as string) || (userId as string),
         email,
         fullName,
         primeId,
@@ -81,55 +86,54 @@ export async function updateUser({ email, fullName, primeId }: ClerkUser) {
   }
 }
 
-export async function deleteUser(userId : string) {
+export async function deleteUser(userId: string) {
   try {
     console.log({
-      userId
-    })
-    if(!userId) {
+      userId,
+    });
+    if (!userId) {
       return {
-        status : 400,
-        message : "User id need to delete an account"
-      }
+        status: 400,
+        message: 'User id need to delete an account',
+      };
     }
-    
+
     // First find user and then delete from DB
     const user = await prisma.user.findFirst({
-      where : {
-        userId
-      }
+      where: {
+        userId,
+      },
     });
-  
-    if(!user) {
+
+    if (!user) {
       return {
-        status : 400,
-        message : "user not found"
-      }
+        status: 400,
+        message: 'user not found',
+      };
     }
 
     const deletedUser = await prisma.user.delete({
-      where : {
-        userId : user.userId
-      }
-    })
+      where: {
+        userId: user.userId,
+      },
+    });
 
-    if(!deletedUser) {
+    if (!deletedUser) {
       return {
-        status : 500,
-        message : "something went wrong"
-      }
+        status: 500,
+        message: 'something went wrong',
+      };
     }
-  
+
     return {
-      status : 200,
-      message : "Account deleted successfully"
-    }
+      status: 200,
+      message: 'Account deleted successfully',
+    };
   } catch (error) {
-    console.log("User delete error " , error);
+    console.log('User delete error ', error);
     return {
-      status : 500,
-      message : "Internal server error"
-    }
+      status: 500,
+      message: 'Internal server error',
+    };
   }
 }
-
