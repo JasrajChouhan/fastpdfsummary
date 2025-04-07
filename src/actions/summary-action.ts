@@ -36,10 +36,10 @@ export const savePDFSummary = async ({
     });
 
     console.log({
-      savePDFSummary,
+      savedSummary,
     });
 
-    if (!savePDFSummary) {
+    if (!savedSummary) {
       return {
         success: false,
         message: 'PDF Summary not saved in DB.',
@@ -58,6 +58,46 @@ export const savePDFSummary = async ({
       success: false,
       message: 'Failed to save PDF summary.',
       error,
+    };
+  }
+};
+
+export const getPDFSummaries = async () => {
+  try {
+    const { status, data, message } = await onAuthenticateUser();
+
+    if (status !== 200) {
+      throw new Error(message);
+    }
+
+    const summaries = await prisma.pdfSummaries.findMany({
+      where: {
+        userId: data?.userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!summaries || summaries.length === 0) {
+      return {
+        success: false,
+        message: 'No summaries found.',
+        summaries: [],
+      };
+    }
+
+    return {
+      success: true,
+      message: 'Successfully fetched all summaries.',
+      summaries,
+    };
+  } catch (error) {
+    console.error('❌ Error fetching summaries:', error);
+    return {
+      success: false,
+      message: 'Failed to get summaries.',
+      error: (error as Error).message,
     };
   }
 };

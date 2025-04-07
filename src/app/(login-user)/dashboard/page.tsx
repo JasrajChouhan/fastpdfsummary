@@ -1,15 +1,13 @@
-'use client';
-
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {UpgradeBanner} from '@/components/dashboard/upgrade-banner';
+import { UpgradeBanner } from '@/components/dashboard/upgrade-banner';
+import { SummaryList } from '@/components/dashboard/summary-list';
 
 const Dashboard = () => {
   return (
     <main className="max-w-5xl mx-auto min-h-screen py-10 bg-background text-foreground">
       <section className="container max-w-6xl mx-auto px-4 md:px-8">
-        
         {/* Header */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 py-6">
           <div>
@@ -34,6 +32,10 @@ const Dashboard = () => {
 
         {/* Upgrade CTA */}
         <UpgradeBanner remainingDocs={5} />
+
+        {/* List of Summary */}
+
+        <SummaryList />
       </section>
     </main>
   );
