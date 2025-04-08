@@ -2,6 +2,8 @@
 
 import { prisma } from '@/lib/prisma';
 import { onAuthenticateUser } from './user-auth';
+import { utapi } from '@/utils/uploadthing';
+import { revalidatePath } from 'next/cache';
 
 export interface SavePDFSummaryType {
   userId?: string;
@@ -98,6 +100,59 @@ export const getPDFSummaries = async () => {
       success: false,
       message: 'Failed to get summaries.',
       error: (error as Error).message,
+    };
+  }
+};
+
+export const deletePDFSummary = async (id: string) => {
+  try {
+    if (!id) {
+      return {
+        success: false,
+        message: 'Id must be for delete a PDF',
+      };
+    }
+
+    const { status, data, message } = await onAuthenticateUser();
+
+    if (status != 200) {
+      throw new Error(message);
+    }
+
+    const resp = await prisma.pdfSummaries.delete({
+      where: {
+        id,
+      },
+    });
+
+    if (!resp) {
+      return {
+        success: false,
+        message: 'delete pdf operation failed on db lavel',
+      };
+    }
+
+    const uploadthingDeleteResp = await utapi.deleteFiles(resp.fileName);
+
+    if (!uploadthingDeleteResp.success) {
+      return {
+        success: false,
+        message: 'delete pdf operation failed on db lavel',
+      };
+    }
+
+    revalidatePath('/dashboard');
+    return {
+      success: true,
+      message: 'PDF delete successfully',
+      deleteCount: uploadthingDeleteResp.deletedCount,
+    };
+  } catch (error) {
+    console.log('PDF delete failed');
+    return {
+      success: false,
+      message: 'Internal server error',
+      error,
     };
   }
 };
