@@ -2,8 +2,14 @@
 
 import { prisma } from '@/lib/prisma';
 import { onAuthenticateUser } from './user-auth';
-import { utapi } from '@/utils/uploadthing';
 import { revalidatePath } from 'next/cache';
+import { UTApi } from 'uploadthing/server';
+import { auth } from '@clerk/nextjs/server';
+
+const utapi = new UTApi({
+  token: process.env.UPLOADTHING_TOKEN,
+  logLevel: 'All',
+});
 
 export interface SavePDFSummaryType {
   userId?: string;
@@ -132,7 +138,7 @@ export const deletePDFSummary = async (id: string) => {
       };
     }
 
-    const uploadthingDeleteResp = await utapi.deleteFiles(resp.fileName);
+    const uploadthingDeleteResp = await utapi.deleteFiles([resp.fileName]);
 
     if (!uploadthingDeleteResp.success) {
       return {
@@ -152,6 +158,86 @@ export const deletePDFSummary = async (id: string) => {
     return {
       success: false,
       message: 'Internal server error',
+      error,
+    };
+  }
+};
+
+export const getPDFSummaryById = async (id: string) => {
+  try {
+    if (!id) {
+      return {
+        success: false,
+        message: 'Id must require for get PDF summary',
+      };
+    }
+
+    const { status, message } = await onAuthenticateUser();
+    if (status != 200) {
+      throw new Error(message);
+    }
+
+    const summary = await prisma.pdfSummaries.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!summary) {
+      return {
+        success: false,
+        message: 'Operation failed for getting a PDF summary',
+      };
+    }
+
+    return {
+      success: true,
+      message: 'Successfully getting a PDF Summary',
+      summary,
+    };
+  } catch (error) {
+    console.log('Error while getting PDF summary ', error);
+    return {
+      success: false,
+      message: 'Internal server error',
+      error,
+    };
+  }
+};
+
+export const toggleSummaryStatus = async (
+  summaryId: string,
+  value: boolean,
+) => {
+  try {
+    if (!summaryId) {
+      return {
+        success: false,
+        message: 'Summary ID is missing.',
+      };
+    }
+
+    const { status, message } = await onAuthenticateUser();
+    if (status !== 200) {
+      return {
+        success: false,
+        message: message || 'User not authenticated.',
+      };
+    }
+
+    await prisma.pdfSummaries.update({
+      where: { id: summaryId },
+      data: { status: value },
+    });
+
+    return {
+      success: true,
+      message: 'Successfully toggled the status of the PDF summary.',
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.message || 'Internal server error.',
       error,
     };
   }
