@@ -21,8 +21,10 @@ type DeleteButtonProps = {
 
 export const DeleteButton = ({ summaryId }: DeleteButtonProps) => {
   const [open, setOpen] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const handleDelete = async (id: string) => {
+    setLoading(true);
     try {
       toast.info('Delete operation start');
       const resp = await deletePDFSummary(id);
@@ -31,7 +33,9 @@ export const DeleteButton = ({ summaryId }: DeleteButtonProps) => {
       } else {
         toast.error(resp.message);
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       toast.error('Delete operation failed');
       console.error(error);
     }
@@ -74,7 +78,7 @@ export const DeleteButton = ({ summaryId }: DeleteButtonProps) => {
             aria-label="Confirm deletion"
             className="bg-gray-800 hover:bg-gray-900"
           >
-            Delete
+            {loading ? 'Deleting....' : 'Delete'}
           </Button>
         </DialogFooter>
       </DialogContent>
