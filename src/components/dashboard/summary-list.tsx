@@ -1,15 +1,12 @@
 import { getPDFSummaries } from '@/actions/summary-action';
 import { SummaryCard } from './summary-card';
+import { SummaryNotFound } from '@/components/dashboard/summary-not-found';
 
 export const SummaryList = async () => {
   const summaryList = await getPDFSummaries();
 
   if (!summaryList.success || !summaryList.summaries) {
-    return (
-      <section className="mt-10 text-center text-gray-500">
-        <p>No summaries found or failed to load.</p>
-      </section>
-    );
+    return <SummaryNotFound />;
   }
 
   return (
