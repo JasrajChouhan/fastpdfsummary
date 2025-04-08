@@ -8,6 +8,7 @@ import { DeleteButton } from '@/components/dashboard/delete-button';
 import { SummaryStatusWrapper } from '@/components/summary/summary-status-wrapper';
 import { Download } from 'lucide-react';
 import { redirect } from 'next/navigation';
+import { BackToDashboard } from '@/components/summary/back-dashboard';
 
 const SummaryDetails = async ({ params }: SummaryParams) => {
   const { id } = await params;
@@ -34,6 +35,7 @@ const SummaryDetails = async ({ params }: SummaryParams) => {
 
   return (
     <section className="w-full px-6 py-10 space-y-8">
+      <BackToDashboard />
       <div
         key={summary.id}
         className="rounded-2xl shadow-md p-6 border border-border bg-background"
