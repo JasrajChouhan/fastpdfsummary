@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { generatePDFSummary } from '@/actions/upload-action';
 import { Loader2 } from 'lucide-react';
 import { savePDFSummary } from '@/actions/summary-action';
+import { redirect } from 'next/navigation';
 
 const FileFormSchema = z.object({
   file: z
@@ -102,6 +103,7 @@ export const UploadForm = () => {
       });
 
       toast.success('✅ Summary generated successfully!');
+      redirect('/dashboard');
       console.log('Summary:', data?.summary);
     } catch (error) {
       toast.error('🚨 Something went wrong. Try again later.');

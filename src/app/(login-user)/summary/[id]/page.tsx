@@ -34,13 +34,17 @@ const SummaryDetails = async ({ params }: SummaryParams) => {
   }
 
   return (
-    <section className="w-full px-6 py-10 space-y-8">
+    <section className="max-w-5xl mx-auto px-6 py-10 space-y-8">
       <BackToDashboard />
       <div
         key={summary.id}
         className="rounded-2xl shadow-md p-6 border border-border bg-background"
       >
-        <div className={'flex items-center justify-between'}>
+        <div
+          className={
+            'flex flex-col my-3 sm:my-0 sm:flex-row sm:items-center sm:justify-between'
+          }
+        >
           <div>
             <h2 className="text-2xl font-semibold mb-2">{summary.title}</h2>
             <p className="text-muted-foreground text-sm mb-4">
@@ -59,7 +63,7 @@ const SummaryDetails = async ({ params }: SummaryParams) => {
             {/** TODO : Download summary in diff format */}
           </div>
         </div>
-        <div className="text-base text-foreground whitespace-pre-wrap">
+        <div className="max-h-[250px] overflow-y-auto pr-2  text-base text-foreground whitespace-pre-wrap">
           {summary.summaryText}
         </div>
         <a

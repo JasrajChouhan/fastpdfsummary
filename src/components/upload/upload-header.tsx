@@ -17,7 +17,7 @@ export const UploadHeader = () => {
       <h1 className="uppercase tracking-tight  text-gray-900 text-3xl sm:text-4xl lg:text-5xl font-semibold text-center mt-8">
         Start uploading{' '}
         <span className="relative inline-block">
-          <span className="relative z-10 px-2">your PDF`&apos;`s </span>
+          <span className="relative z-10 px-2">your PDF&apos;s </span>
           <span
             className="absolute inset-0 rounded-lg bg-rose-200/50 -rotate-2 transform -skew-y-1 "
             area-hidden="true"

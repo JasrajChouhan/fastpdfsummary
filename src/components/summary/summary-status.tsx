@@ -41,13 +41,13 @@ export const SummaryStatus = ({
       >
         <Label
           htmlFor="summary_status"
-          className={`text-sm font-semibold px-2 py-1 rounded-full text-gray-500 ${
+          className={`text-sm font-semibold px-4 py-1 rounded-full text-gray-500 ${
             status
               ? 'bg-gradient-to-r from-green-400 to-green-500 text-white'
               : 'bg-gradient-to-r from-gray-200 to-zinc-200 border border-gray-400'
           }`}
         >
-          {status ? 'Completed' : 'Not Completed'}
+          {status ? 'Read' : 'Unread'}
         </Label>
       </motion.div>
     </div>

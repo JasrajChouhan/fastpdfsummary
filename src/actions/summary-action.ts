@@ -55,7 +55,7 @@ export const savePDFSummary = async ({
     }
 
     console.log('✅ PDF summary saved to database:', savedSummary.id);
-
+    revalidatePath('/dashboard');
     return {
       success: true,
       message: 'PDF Summary is save into DB',
