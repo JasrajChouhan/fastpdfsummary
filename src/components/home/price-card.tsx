@@ -1,9 +1,51 @@
+'use client';
+
 import { CheckCircle, XCircle } from 'lucide-react';
 import { Plan } from './pricing-section';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
+import { useState } from 'react';
+import { redirect } from 'next/navigation';
 
 export const PriceCard = ({ plan }: { plan: Plan }) => {
+  const [isPending, setIsPending] = useState<boolean>(false);
+
+  const handlePayment = async () => {
+    if (plan.name === 'Basic') {
+      redirect('/upload');
+    }
+
+    try {
+      setIsPending(true);
+      const res = await fetch('/api/user/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: plan.id }),
+      });
+
+      console.log(res);
+
+      const { order } = await res.json();
+
+      const rzp = new (window as any).Razorpay({
+        key: process.env.NEXT_PUBLIC_TEST_KEY_ID!,
+        amount: order.amount,
+        currency: 'INR',
+        name: 'Vinama',
+        description: `Subscription: ${plan.name}`,
+        order_id: order.id,
+        callback_url: '/upload',
+        theme: { color: '#6366f1' },
+      });
+
+      rzp.open();
+    } catch (error) {
+      alert('Payment failed. Please try again.');
+    } finally {
+      setIsPending(false);
+    }
+  };
   return (
     <div
       className={cn(
@@ -36,8 +78,9 @@ export const PriceCard = ({ plan }: { plan: Plan }) => {
           </li>
         ))}
       </ul>
-      <Link
-        href={plan.paymentLink}
+      <Button
+        disabled={isPending}
+        onClick={handlePayment}
         className={cn(
           'mt-6 block w-full text-center font-semibold py-3 rounded-2xl transition-all',
           plan.id === 'pro'
@@ -46,7 +89,7 @@ export const PriceCard = ({ plan }: { plan: Plan }) => {
         )}
       >
         Buy Now
-      </Link>
+      </Button>
     </div>
   );
 };
