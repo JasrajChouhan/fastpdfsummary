@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 
 export const onAuthenticateUser = async () => {
   try {
     const { userId } = await auth();
-
+    const user = await currentUser();
     if (!userId) {
       return {
         status: 401,
@@ -20,6 +20,7 @@ export const onAuthenticateUser = async () => {
       message: 'User is authenticated',
       data: {
         userId,
+        email: user?.emailAddresses[0].emailAddress,
       },
     };
   } catch (error: any) {
