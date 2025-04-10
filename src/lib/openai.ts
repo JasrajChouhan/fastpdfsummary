@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { vinamaPrompt } from './prompt';
+import { vinamaPrompt } from '../utils/prompt';
 import { generatePDFSummaryFromGemini } from './gemini';
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

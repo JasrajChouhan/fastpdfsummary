@@ -3,7 +3,7 @@
 import React, { FormEvent } from 'react';
 import { UploadFileInput } from './upload-file-input';
 import { z } from 'zod';
-import { useUploadThing } from '@/utils/uploadthing';
+import { useUploadThing } from '@/lib/uploadthing';
 
 import { toast } from 'sonner';
 import { generatePDFSummary } from '@/actions/upload-action';

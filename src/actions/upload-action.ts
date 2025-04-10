@@ -1,8 +1,8 @@
 'use server';
 
 import { formatFileNameAsFileTitle } from '@/utils/format-title';
-import { fetchAndExtractText } from '@/utils/langchain';
-import { generatePDFSummaryFromOpenAI } from '@/utils/openai';
+import { fetchAndExtractText } from '@/lib/langchain';
+import { generatePDFSummaryFromOpenAI } from '@/lib/openai';
 
 export const generatePDFSummary = async (
   uploadResponse: [
