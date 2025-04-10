@@ -82,7 +82,7 @@ export const PriceCard = ({ plan }: { plan: Plan }) => {
         disabled={isPending}
         onClick={handlePayment}
         className={cn(
-          'mt-6 block w-full text-center font-semibold py-3 rounded-2xl transition-all',
+          'mt-6 w-full text-center font-semibold py-3 rounded-2xl transition-all',
           plan.id === 'pro'
             ? 'bg-gradient-to-r from-rose-700 via-rose-800 to-rose-900 hover:from-rose-800 hover:via-rose-900 hover:to-black text-white'
             : 'bg-gradient-to-r from-rose-400 via-rose-500 to-rose-600 hover:from-rose-600 hover:via-rose-700 hover:to-rose-800 text-white',
