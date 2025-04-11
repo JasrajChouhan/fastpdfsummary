@@ -1,6 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 
-import { vinamaPrompt } from './prompt';
+import { vinamaPrompt } from '@/utils/prompt';
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY!,
